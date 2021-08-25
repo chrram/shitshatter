@@ -3,13 +3,22 @@
     <head>
         <title>Shit shat away!</title>
     </head>
-<body>
+    <body>
+        <form>
 
-<?php
+        </form>
 
-echo "Anonymous shit shat.";
+        <?php
+
     
-?>
+        $conn = new mysqli("localhost", "root@localhost");
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-</body>
+        echo "Anonymous shit shat.";
+            
+        ?>
+
+    </body>
 </html>
