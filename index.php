@@ -71,8 +71,16 @@ CREATE TABLE IF NOT EXISTS posts  (
 
                     if(isset($_POST['text']))
                     {
-                        $post = $_POST['text'];
-                    
+                        $post =  filter_var($_POST['text'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+                        $ip = $_SERVER['REMOTE_ADDR'];
+
+                        $conn = new mysqli("localhost", "root", "", "postsdb");
+                        $stmt = $conn->prepare("INSERT INTO posts (post, ip) VALUES (?, ?)");
+                        $stmt->bind_param("ss", $post, $ip);
+
+                        $stmt->execute();
+                        $stmt->close();
+                        $conn->close();
                     }
 
                     function queryData($query) {
@@ -81,7 +89,6 @@ CREATE TABLE IF NOT EXISTS posts  (
                         $result = $conn->query($query);
 
                         return $result;
-
                         $conn->close();
                     }
                     
