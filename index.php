@@ -14,11 +14,13 @@ CREATE TABLE IF NOT EXISTS posts  (
         <title>Shit shat away!</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
-
             :root {
                 --color: white;
             }
-            body{background-color:black;}
+            body{
+                background-color:black;
+                
+            }
             h4{color:white;}
 
             textarea:hover, 
@@ -44,78 +46,80 @@ CREATE TABLE IF NOT EXISTS posts  (
         </style>
     </head>
     <body>
-    <canvas id="canvasBackground" style="position: absolute"> </canvas>
+    <canvas id="canvasBackground" style="position: absolute;"> </canvas>
         
-        <div class="row d-flex justify-content-center ">
-            <div style="background:transparent; height:auto;"  class="col-md-6">
+        <div class="container-fluid">
+            <div class="row d-flex justify-content-center ">
+                <div style="background:transparent; height:auto;"  class="col-md-6">
 
-                <div class="container text-center">
+                    <div class="container text-center">
 
-                    <h4>Shit shatter messageboard</h4>
-                    
-                    <form class="text-left px-2 p-3 mx-auto text-center" method="post">
-                    
-                            <div class="col-md-6 mx-auto">
-
-                                <textarea class="userPost" style="background:black; color:white; border-radius:5px;" name="text" rows="5" cols="38" required></textarea>
-                                <div class="container pt-3 text-left">
-                                    <input class="btn btn-dark" type="submit" name="submit" value="Submit">
-                                </div>
-
-                            </div>
-
-                    </form>
-                </div>
-            
-                <?php
-
-                    if(isset($_POST['text']))
-                    {
-                        $post =  filter_var($_POST['text'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-                        $ip = $_SERVER['REMOTE_ADDR'];
-
-                        $conn = new mysqli("localhost", "root", "", "postsdb");
-                        $stmt = $conn->prepare("INSERT INTO posts (post, ip) VALUES (?, ?)");
-                        $stmt->bind_param("ss", $post, $ip);
-
-                        $stmt->execute();
-                        $stmt->close();
-                        $conn->close();
-                    }
-
-                    function queryData($query) {
-
-                        $conn = new mysqli("localhost", "root", "", "postsdb");
-                        $result = $conn->query($query);
-
-                        return $result;
-                        $conn->close();
-                    }
-                    
-
-                    $posts = queryData("SELECT * FROM posts");
-                    foreach($posts as $row) {
+                        <h4>Shit shatter messageboard</h4>
                         
-                        echo '
-                                <div class="col-md-12 ">
+                        <form class="text-left px-2 p-3 mx-auto text-center" method="post">
+                        
+                                <div class="col-md-6 mx-auto">
 
-                                    <div class="card mb-4 userPost">
-                                        <div style="background:black;" class="card-header">
-                                            <div class="media flex-wrap align-items-center">
-                                                <div style="color:white;" class="media-body ml-3"> 
-                                                    <p>Anonymous </p>
-                                                    <div class="small"> <p>' .$row['posted'], '</p></div>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>' .$row['post'], '</p>
-                                            </div>
-                                        </div>
+                                    <textarea class="userPost" style="background:black; color:white; border-radius:5px;" name="text" rows="5" cols="38" required></textarea>
+                                    <div class="container pt-3 text-left">
+                                        <input class="btn btn-dark" type="submit" name="submit" value="Submit">
                                     </div>
 
-                                </div>';
-                    }
-                ?>
+                                </div>
+
+                        </form>
+                    </div>
+                
+                    <?php
+
+                        if(isset($_POST['text']))
+                        {
+                            $post =  filter_var($_POST['text'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+                            $ip = $_SERVER['REMOTE_ADDR'];
+
+                            $conn = new mysqli("localhost", "root", "", "postsdb");
+                            $stmt = $conn->prepare("INSERT INTO posts (post, ip) VALUES (?, ?)");
+                            $stmt->bind_param("ss", $post, $ip);
+
+                            $stmt->execute();
+                            $stmt->close();
+                            $conn->close();
+                        }
+
+                        function queryData($query) {
+
+                            $conn = new mysqli("localhost", "root", "", "postsdb");
+                            $result = $conn->query($query);
+
+                            return $result;
+                            $conn->close();
+                        }
+                        
+
+                        $posts = queryData("SELECT * FROM posts");
+                        foreach($posts as $row) {
+                            
+                            echo '
+                                    <div class="col-md-12 ">
+
+                                        <div class="card mb-4 userPost">
+                                            <div style="background:black;" class="card-header">
+                                                <div class="media flex-wrap align-items-center">
+                                                    <div style="color:white;" class="media-body ml-3"> 
+                                                        <p>Anonymous </p>
+                                                        <div class="small"> <p>' .$row['posted'], '</p></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>' .$row['post'], '</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>';
+                        }
+                    ?>
+                </div>
             </div>
         </div>
        
@@ -123,9 +127,9 @@ CREATE TABLE IF NOT EXISTS posts  (
            
                 let canvas = document.getElementById("canvasBackground");
                 let ctx = canvas.getContext("2d");
-                    
-                canvas.height = window.innerHeight-20;
-                canvas.width = window.innerWidth-10;
+
+                canvas.height = document.documentElement.scrollHeight-10;
+                canvas.width = window.innerWidth-20;
                     
                 let chars = "01";
                 chars = chars.split("");
